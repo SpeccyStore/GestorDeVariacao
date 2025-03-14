@@ -36,6 +36,7 @@ const upload = multer({
 // Servir arquivos estáticos
 app.use(express.static(path.join(__dirname)));
 app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Arquivo para armazenar os dados
 const DATA_FILE = 'catalog-data.json';
