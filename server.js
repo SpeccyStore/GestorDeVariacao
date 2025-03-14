@@ -250,6 +250,11 @@ app.use((err, req, res, next) => {
     next(err);
 });
 
+app.use((req, res, next) => {
+    console.log(`Recebida requisição: ${req.method} ${req.url}`);
+    next();
+});
+
 // Iniciar o servidor
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);
