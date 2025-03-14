@@ -25,17 +25,17 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="addItemForm">
+                    <form id="itemForm" onsubmit="addItem(event)">
+                        <div class="form-group">
+                            <label for="itemName">Nome do Item:</label>
+                            <input type="text" class="form-control" id="itemName" name="name" required>
+                        </div>
                         <div class="mb-3">
                             <label for="itemSelect" class="form-label">Selecione um item ou crie novo</label>
                             <select class="form-select" id="itemSelect">
                                 <option value="">Selecione...</option>
                                 <option value="novo">Criar Novo Item</option>
                             </select>
-                        </div>
-                        <div class="mb-3" style="display: none;">
-                            <label for="itemName" class="form-label">Nome do Item</label>
-                            <input type="text" class="form-control" id="itemName" required>
                         </div>
                         <div class="mb-3">
                             <label for="variationName" class="form-label">Nome da Variação</label>
@@ -65,11 +65,13 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Aviso</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="close" onclick="closeModal()" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="modal-body" id="alertModalBody"></div>
+                <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Fechar</button>
                 </div>
             </div>
         </div>

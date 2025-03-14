@@ -325,45 +325,67 @@ function toggleExistingVariations(name) {
 }
 
 // Funções principais
-async function addItem(name) {
+async function addItem(event) {
+    event.preventDefault();
     try {
-        const formData = new FormData();
-        formData.append('name', name);
+        const formData = new FormData(event.target);
+        const itemName = formData.get('name');
         
-        const variationNames = pendingVariations.map(v => v.name);
-        console.log('Nomes das variações:', variationNames);
-        formData.append('variationNames', JSON.stringify(variationNames));
-        
-        pendingVariations.forEach((variation, index) => {
-            formData.append('images', variation.file);
-            formData.append(`variationName_${index}`, variation.name);
+        // Validação do lado do cliente
+        if (!itemName) {
+            showModal('Por favor, insira um nome para o item');
+            return;
+        }
+
+        // Log para debug
+        console.log('Dados sendo enviados:', {
+            name: itemName,
+            variations: formData.getAll('variations[]')
         });
 
-        const response = await fetch(`${API_URL}/add-item`, {
+        const response = await fetch('/add-item', {
             method: 'POST',
             body: formData
         });
 
         if (!response.ok) {
-            throw new Error(`Erro HTTP: ${response.status}`);
+            const errorData = await response.json();
+            throw new Error(`Erro HTTP: ${response.status} - ${errorData.error}`);
         }
 
         const result = await response.json();
-        if (result.success) {
-            catalogData = result.data;
-            updateCatalog();
-            updateAdminList();
-            updateItemSelect();
-            pendingVariations = [];
-            updateVariationsPreview();
-            adminModal.hide();
-            showAlert('Item adicionado com sucesso!');
-        } else {
-            throw new Error(result.error || 'Erro ao adicionar item');
-        }
+        showModal('Item adicionado com sucesso!');
+        event.target.reset();
+        loadCatalog();
     } catch (error) {
-        console.error('Erro ao adicionar item:', error);
-        showAlert(`Erro ao adicionar item: ${error.message}`);
+        console.error('Erro detalhado:', error);
+        showModal(`Erro ao adicionar item: ${error.message}`);
+    }
+}
+
+// Corrigir a função showModal para evitar o erro de focus
+function showModal(message) {
+    const modal = document.getElementById('alertModal');
+    const messageElement = modal.querySelector('.modal-body');
+    messageElement.textContent = message;
+    
+    modal.style.display = 'block';
+    modal.removeAttribute('inert');
+    
+    // Ajuste na lógica de focus
+    const closeButton = modal.querySelector('.close');
+    if (closeButton) {
+        setTimeout(() => {
+            closeButton.focus();
+        }, 100);
+    }
+}
+
+function closeModal() {
+    const modal = document.getElementById('alertModal');
+    if (modal) {
+        modal.style.display = 'none';
+        modal.setAttribute('inert', '');
     }
 }
 
@@ -610,7 +632,7 @@ addItemForm.addEventListener('submit', (e) => {
         return;
     }
 
-    addItem(name);
+    addItem(e);
     addItemForm.reset();
     itemNameInput.style.display = 'none';
     itemNameInput.required = false;
