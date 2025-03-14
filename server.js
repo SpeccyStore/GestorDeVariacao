@@ -224,6 +224,15 @@ app.delete('/delete-variation/:name/:index', async (req, res) => {
     }
 });
 
+// Rota específica para a página de login
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.get('/login.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
 // Tratamento de erros do Multer
 app.use((err, req, res, next) => {
     if (err instanceof multer.MulterError) {
