@@ -651,4 +651,45 @@ style.textContent = `
 document.head.appendChild(style);
 
 // Inicialização
-loadData(); 
+loadData();
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Botão Produtos
+    const produtosBtn = document.querySelector('.produtos-btn');
+    if (produtosBtn) {
+        produtosBtn.addEventListener('click', function() {
+            window.location.href = '/';
+        });
+    }
+
+    // Carregar o catálogo se estivermos na página principal
+    if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+        loadCatalog();
+    }
+
+    // Setup do formulário de item
+    setupItemForm();
+});
+
+// Função para configurar o formulário
+function setupItemForm() {
+    const itemSelect = document.getElementById('itemSelect');
+    const itemNameInput = document.getElementById('itemName');
+    const itemNameGroup = document.getElementById('itemNameGroup');
+
+    if (itemSelect) {
+        itemSelect.addEventListener('change', function() {
+            const selectedValue = this.value;
+            if (selectedValue === 'new') {
+                itemNameGroup.style.display = 'block';
+                itemNameInput.required = true;
+                itemNameInput.value = '';
+                itemNameInput.focus();
+            } else {
+                itemNameGroup.style.display = 'none';
+                itemNameInput.required = false;
+                itemNameInput.value = selectedValue;
+            }
+        });
+    }
+} 

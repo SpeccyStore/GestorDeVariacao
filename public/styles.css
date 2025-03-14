@@ -523,4 +523,9 @@ hr {
 
 #alertModal .btn-close:hover {
     opacity: 1;
+}
+
+.produtos-btn {
+    margin: 10px;
+    /* outros estilos que você queira adicionar */
 } 
