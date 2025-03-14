@@ -9,7 +9,12 @@
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "server.js"
+            "dest": "/"
         }
-    ]
+    ],
+    "build": {
+        "env": {
+            "NODE_ENV": "production"
+        }
+    }
 } 
