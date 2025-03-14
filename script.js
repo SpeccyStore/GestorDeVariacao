@@ -325,35 +325,45 @@ function toggleExistingVariations(name) {
 }
 
 // Funções principais
-async function addItem(event) {
-    event.preventDefault();
+async function addItem(name) {
     try {
-        const formData = new FormData(event.target);
+        const formData = new FormData();
+        formData.append('name', name);
         
-        // Log para debug
-        console.log('Dados sendo enviados:', {
-            name: formData.get('name'),
-            variations: formData.getAll('variations[]')
+        const variationNames = pendingVariations.map(v => v.name);
+        console.log('Nomes das variações:', variationNames);
+        formData.append('variationNames', JSON.stringify(variationNames));
+        
+        pendingVariations.forEach((variation, index) => {
+            formData.append('images', variation.file);
+            formData.append(`variationName_${index}`, variation.name);
         });
 
-        const response = await fetch('/add-item', {
+        const response = await fetch(`${API_URL}/add-item`, {
             method: 'POST',
             body: formData
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`Erro HTTP: ${response.status} - ${errorData.error}`);
+            throw new Error(`Erro HTTP: ${response.status}`);
         }
 
         const result = await response.json();
-        showModal('Item adicionado com sucesso!');
-        // Limpar formulário e atualizar lista
-        event.target.reset();
-        loadCatalog();
+        if (result.success) {
+            catalogData = result.data;
+            updateCatalog();
+            updateAdminList();
+            updateItemSelect();
+            pendingVariations = [];
+            updateVariationsPreview();
+            adminModal.hide();
+            showAlert('Item adicionado com sucesso!');
+        } else {
+            throw new Error(result.error || 'Erro ao adicionar item');
+        }
     } catch (error) {
-        console.error('Erro detalhado:', error);
-        showModal(`Erro ao adicionar item: ${error.message}`);
+        console.error('Erro ao adicionar item:', error);
+        showAlert(`Erro ao adicionar item: ${error.message}`);
     }
 }
 
@@ -600,7 +610,7 @@ addItemForm.addEventListener('submit', (e) => {
         return;
     }
 
-    addItem(e);
+    addItem(name);
     addItemForm.reset();
     itemNameInput.style.display = 'none';
     itemNameInput.required = false;
@@ -635,21 +645,3 @@ document.head.appendChild(style);
 
 // Inicialização
 loadData(); 
-
-function showModal(message) {
-    const modal = document.getElementById('alertModal');
-    const messageElement = modal.querySelector('.modal-body');
-    messageElement.textContent = message;
-    
-    modal.style.display = 'block';
-    modal.removeAttribute('inert'); // Remove inert quando abre
-    
-    const closeButton = modal.querySelector('.close');
-    closeButton.focus();
-}
-
-function closeModal() {
-    const modal = document.getElementById('alertModal');
-    modal.style.display = 'none';
-    modal.setAttribute('inert', ''); // Adiciona inert quando fecha
-}

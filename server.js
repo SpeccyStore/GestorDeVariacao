@@ -74,6 +74,13 @@ app.get('/items', (req, res) => {
 
 app.post('/add-item', upload.array('images'), async (req, res) => {
     try {
+        console.log('Requisição recebida:', req.body); // Log para debug
+        console.log('Arquivos recebidos:', req.files); // Log para debug
+
+        if (!req.body.name) {
+            return res.status(400).json({ error: 'Nome do item é obrigatório' });
+        }
+
         const { name } = req.body;
         const files = req.files;
 
@@ -82,13 +89,6 @@ app.post('/add-item', upload.array('images'), async (req, res) => {
             filesCount: files?.length,
             body: req.body
         });
-
-        if (!name) {
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Nome do item é obrigatório' 
-            });
-        }
 
         if (!files || files.length === 0) {
             return res.status(400).json({ 
@@ -139,10 +139,10 @@ app.post('/add-item', upload.array('images'), async (req, res) => {
         console.log('Item adicionado com sucesso:', name);
         res.json({ success: true, data: catalogData });
     } catch (error) {
-        console.error('Erro detalhado ao adicionar item:', error);
+        console.error('Erro ao adicionar item:', error);
         res.status(500).json({ 
-            success: false, 
-            error: 'Erro ao processar o upload: ' + (error.message || 'Erro desconhecido')
+            error: 'Erro ao adicionar item', 
+            details: error.message 
         });
     }
 });
