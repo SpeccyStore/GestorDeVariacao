@@ -330,25 +330,23 @@ async function addItem(event) {
     try {
         const formData = new FormData(event.target);
         const itemName = formData.get('name');
-        const images = formData.getAll('images');
         
-        // Validação do lado do cliente
-        if (!itemName) {
-            showModal('Por favor, insira um nome para o item');
+        // Validação do nome do item
+        if (!itemName || itemName.trim() === '') {
+            showModal('Por favor, insira um nome válido para o item');
             return;
         }
 
-        // Validar se há pelo menos uma imagem
-        if (!images || images.length === 0 || !images[0].size) {
-            showModal('Por favor, selecione pelo menos uma imagem');
+        // Verificar se há variações pendentes
+        if (pendingVariations.length === 0) {
+            showModal('Por favor, adicione pelo menos uma variação');
             return;
         }
 
-        // Log para debug
-        console.log('Dados sendo enviados:', {
-            name: itemName,
-            variations: formData.getAll('variations[]'),
-            images: images.map(img => img.name)
+        // Adicionar variações ao FormData
+        pendingVariations.forEach((variation, index) => {
+            formData.append(`variation_${index}`, variation.file);
+            formData.append(`variation_name_${index}`, variation.name);
         });
 
         const response = await fetch('/add-item', {
@@ -371,21 +369,26 @@ async function addItem(event) {
     }
 }
 
-// Corrigir a função showModal para evitar o erro de focus
+// Corrigindo o erro de focus
 function showModal(message) {
-    const modal = document.getElementById('alertModal');
-    const messageElement = modal.querySelector('.modal-body');
-    messageElement.textContent = message;
+    const modalElement = document.getElementById('alertModal');
+    if (!modalElement) {
+        console.error('Elemento do modal não encontrado');
+        return;
+    }
     
-    modal.style.display = 'block';
-    modal.removeAttribute('inert');
+    const modalBody = document.getElementById('alertModalBody');
+    if (modalBody) {
+        modalBody.textContent = message;
+    }
     
-    // Ajuste na lógica de focus
-    const closeButton = modal.querySelector('.close');
+    const modal = new bootstrap.Modal(modalElement);
+    modal.show();
+    
+    // Focar no botão de fechar do modal
+    const closeButton = modalElement.querySelector('.btn-close');
     if (closeButton) {
-        setTimeout(() => {
-            closeButton.focus();
-        }, 100);
+        closeButton.focus();
     }
 }
 
