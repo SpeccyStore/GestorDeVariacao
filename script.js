@@ -330,6 +330,7 @@ async function addItem(event) {
     try {
         const formData = new FormData(event.target);
         const itemName = formData.get('name');
+        const images = formData.getAll('images');
         
         // Validação do lado do cliente
         if (!itemName) {
@@ -337,10 +338,17 @@ async function addItem(event) {
             return;
         }
 
+        // Validar se há pelo menos uma imagem
+        if (!images || images.length === 0 || !images[0].size) {
+            showModal('Por favor, selecione pelo menos uma imagem');
+            return;
+        }
+
         // Log para debug
         console.log('Dados sendo enviados:', {
             name: itemName,
-            variations: formData.getAll('variations[]')
+            variations: formData.getAll('variations[]'),
+            images: images.map(img => img.name)
         });
 
         const response = await fetch('/add-item', {
@@ -543,39 +551,16 @@ addVariationBtn.addEventListener('click', () => {
 });
 
 itemSelect.addEventListener('change', function() {
-    const isNewItem = this.value === 'novo';
-    const itemNameInput = document.getElementById('itemName');
-    
-    if (isNewItem) {
-        // Mostrar campo de nome do item
-        if (itemNameInput && itemNameInput.parentElement) {
-            itemNameInput.parentElement.style.display = 'block';
-            itemNameInput.required = true;
-            itemNameInput.value = '';
-            itemNameInput.focus();
-        }
-        
-        // Limpar variações pendentes
-        pendingVariations = [];
-        variationsContainer.innerHTML = `
-            <div class="new-variations">
-                <h3 class="mb-3">Adicionar Novas Variações</h3>
-            </div>
-        `;
+    const selectedValue = this.value;
+    if (selectedValue === 'new') {
+        itemNameInput.style.display = 'block';
+        itemNameInput.required = true;
+        itemNameInput.value = '';
+        itemNameInput.focus();
     } else {
-        // Esconder campo de nome do item
-        if (itemNameInput && itemNameInput.parentElement) {
-            itemNameInput.parentElement.style.display = 'none';
-            itemNameInput.required = false;
-        }
-        
-        if (this.value) {
-            const variationName = document.getElementById('variationName');
-            if (variationName) {
-                variationName.focus();
-            }
-            editItem(this.value);
-        }
+        itemNameInput.style.display = 'none';
+        itemNameInput.required = false;
+        itemNameInput.value = selectedValue;
     }
 });
 

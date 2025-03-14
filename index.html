@@ -25,34 +25,27 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="itemForm" onsubmit="addItem(event)">
+                    <form id="itemForm" onsubmit="addItem(event)" enctype="multipart/form-data">
                         <div class="form-group">
-                            <label for="itemName">Nome do Item:</label>
-                            <input type="text" class="form-control" id="itemName" name="name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="itemSelect" class="form-label">Selecione um item ou crie novo</label>
-                            <select class="form-select" id="itemSelect">
+                            <label for="itemSelect">Selecione um Item:</label>
+                            <select class="form-control" id="itemSelect" name="itemSelect">
                                 <option value="">Selecione...</option>
-                                <option value="novo">Criar Novo Item</option>
+                                <option value="new">Criar Novo Item</option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="variationName" class="form-label">Nome da Variação</label>
-                            <input type="text" class="form-control" id="variationName">
+
+                        <div class="form-group" id="itemNameGroup" style="display: none;">
+                            <label for="itemName">Nome do Item:</label>
+                            <input type="text" class="form-control" id="itemName" name="name">
                         </div>
-                        <div class="mb-3">
-                            <label for="coverUpload" class="form-label">Imagem da Variação</label>
-                            <input type="file" class="form-control" id="coverUpload" accept="image/*">
-                        </div>
-                        <button type="button" id="addVariationBtn" class="btn btn-secondary">
+
+                        <div id="variationsContainer"></div>
+
+                        <button type="button" class="btn btn-primary mb-3" onclick="addVariation()">
                             Adicionar Variação
                         </button>
-                        <hr>
-                        <div id="variationsContainer"></div>
-                        <div class="text-end mt-3">
-                            <button type="submit" class="btn btn-primary">Salvar</button>
-                        </div>
+
+                        <button type="submit" class="btn btn-success">Salvar</button>
                     </form>
                 </div>
             </div>
