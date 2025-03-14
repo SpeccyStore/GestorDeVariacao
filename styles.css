@@ -1,0 +1,518 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+}
+
+.admin-button {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0.5rem 1rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.catalog-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.catalog-item {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: box-shadow 0.3s;
+}
+
+.catalog-item:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.item-header h3 {
+    margin: 0;
+    color: #212529;
+    font-size: 1.25rem;
+}
+
+.variations-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.variation {
+    position: relative;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 0.5rem;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.variation-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.variation-number {
+    font-size: 0.9rem;
+    color: #495057;
+    margin-top: 0.5rem;
+}
+
+.variation-input-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .variation-input-group {
+        flex-direction: column;
+    }
+}
+
+.variation-preview-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    position: relative;
+}
+
+.variation-preview-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.variation-preview-name {
+    font-size: 0.9rem;
+    color: #495057;
+    margin: 0.5rem 0;
+}
+
+.remove-variation-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(220, 53, 69, 0.9);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.variation-preview-item:hover .remove-variation-btn {
+    opacity: 1;
+}
+
+.variations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Modal customizations */
+.modal {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    border-radius: 12px 12px 0 0;
+    padding: 1.5rem;
+}
+
+.modal-title {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.btn-close {
+    background-color: #e9ecef;
+    padding: 0.75rem;
+    border-radius: 50%;
+    opacity: 1;
+    transition: background-color 0.2s;
+}
+
+.btn-close:hover {
+    background-color: #dee2e6;
+}
+
+/* Form Elements */
+.form-select, .form-control {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-select:focus, .form-control:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
+
+.variation-input-group {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+#addVariationBtn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+#addVariationBtn:hover {
+    background-color: #45a049;
+}
+
+/* Admin List */
+.admin-item {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.admin-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.admin-item span {
+    font-size: 1rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.admin-item-buttons {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.admin-item-buttons .edit-btn,
+.admin-item-buttons .delete-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: transform 0.2s;
+}
+
+.admin-item-buttons .edit-btn:hover,
+.admin-item-buttons .delete-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Divider */
+hr {
+    margin: 2rem 0;
+    border: none;
+    height: 1px;
+    background-color: #e9ecef;
+}
+
+/* Submit Button */
+.btn-primary {
+    background-color: #4CAF50;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+/* Variations Container */
+#variationsContainer {
+    margin-top: 1.5rem;
+}
+
+.variation-preview-item {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
+    transition: transform 0.2s;
+}
+
+.variation-preview-item:hover {
+    transform: translateY(-2px);
+}
+
+.variation-preview-name {
+    margin-top: 0.75rem;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.remove-variation-btn {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: opacity 0.2s, background-color 0.2s;
+}
+
+.variation-preview-item:hover .remove-variation-btn {
+    opacity: 1;
+}
+
+.remove-variation-btn:hover {
+    background-color: #c82333;
+}
+
+.variations-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.existing-variations {
+    background-color: #f8f8f8;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.new-variations {
+    background-color: #f0f9f0;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.save-btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+}
+
+.save-btn:hover {
+    background-color: #45a049;
+}
+
+.edit-btn {
+    padding: 0.5rem 1rem;
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.edit-btn:hover {
+    background-color: #0b5ed7;
+}
+
+.item-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.print-btn {
+    padding: 0.5rem 1rem;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.print-btn:hover {
+    background-color: #5a6268;
+}
+
+@media print {
+    .edit-btn,
+    .print-btn,
+    .delete-variation-btn {
+        display: none !important;
+    }
+}
+
+.variation-buttons {
+    display: flex;
+    gap: 0.5rem;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.variation:hover .variation-buttons {
+    opacity: 1;
+}
+
+.variation .print-btn {
+    padding: 0.25rem 0.5rem;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.variation .print-btn:hover {
+    background-color: #5a6268;
+}
+
+.variation .delete-variation-btn {
+    position: static;
+    opacity: 1;
+}
+
+.variation:hover {
+    transform: translateY(-2px);
+}
+
+/* Alert Modal Styles */
+#alertModal .modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+#alertModal .modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    border-radius: 12px 12px 0 0;
+    padding: 1rem 1.5rem;
+}
+
+#alertModal .modal-title {
+    color: #2c3e50;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+#alertModal .modal-body {
+    padding: 1.5rem;
+    font-size: 1rem;
+    color: #2c3e50;
+}
+
+#alertModal .modal-footer {
+    border-top: 1px solid #e9ecef;
+    padding: 1rem 1.5rem;
+}
+
+#alertModal .btn-primary {
+    background-color: #4CAF50;
+    border: none;
+    padding: 0.5rem 2rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+#alertModal .btn-primary:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+#alertModal .btn-close {
+    background-color: transparent;
+    padding: 0.5rem;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+#alertModal .btn-close:hover {
+    opacity: 1;
+} 
